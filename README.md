@@ -26,3 +26,6 @@ It converts each video frame into a matrix of text characters, mapping pixel bri
 
 * Frames are printed sequentially, creating a motion picture effect in pure text
 
+
+
+<img width="491" height="811" alt="Screenshot 2026-08-17 at 11 37 37 PM" src="https://github.com/user-attachments/assets/9c3f8fe7-e483-41c8-aec4-37e8fd47c5a7" />
