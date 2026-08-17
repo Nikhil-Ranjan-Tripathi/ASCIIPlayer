@@ -3,21 +3,9 @@ import os
 import time
 import shutil
 
-# ============================================================
-# CONFIGURATION
-# ============================================================
-
-# More characters = more brightness levels = smoother image
 ASCII_CHARS = " .'`^\",:;Il!i~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$"
 
-# Character aspect-ratio correction
-# Terminal characters are normally taller than they are wide.
 ASPECT_RATIO = 0.50
-
-
-# ============================================================
-# TERMINAL
-# ============================================================
 
 def get_terminal_width():
     """Get the current terminal width."""
@@ -36,10 +24,6 @@ def hide_cursor():
 def show_cursor():
     print("\033[?25h", end="")
 
-
-# ============================================================
-# IMAGE PROCESSING
-# ============================================================
 
 def resize_image(image, new_width):
     height, width = image.shape[:2]
@@ -62,10 +46,6 @@ def grayify(image):
     return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
 
-# ============================================================
-# GRAYSCALE ASCII
-# ============================================================
-
 def pixels_to_ascii(image):
     """
     Convert grayscale pixels to ASCII characters.
@@ -76,9 +56,6 @@ def pixels_to_ascii(image):
     max_index = len(ASCII_CHARS) - 1
 
     for pixel in image.flatten():
-
-        # Pixel = 0   -> darkest character
-        # Pixel = 255 -> lightest character
 
         index = int(pixel / 255 * max_index)
 
@@ -101,11 +78,6 @@ def frame_to_ascii(image, new_width=120):
         rows.append(ascii_str[i:i + new_width])
 
     return "\n".join(rows)
-
-
-# ============================================================
-# TRUE COLOR ASCII
-# ============================================================
 
 def frame_to_color_ascii(image, new_width=120):
 
@@ -133,10 +105,8 @@ def frame_to_color_ascii(image, new_width=120):
 
             char = ASCII_CHARS[index]
 
-            # OpenCV uses BGR
             b, g, r = image[y, x]
 
-            # ANSI true color
             row.append(
                 f"\033[38;2;{r};{g};{b}m{char}"
             )
@@ -146,11 +116,6 @@ def frame_to_color_ascii(image, new_width=120):
         result.append("".join(row))
 
     return "\n".join(result)
-
-
-# ============================================================
-# HALF-BLOCK HIGH RESOLUTION MODE
-# ============================================================
 
 def frame_to_halfblock(image, new_width=120):
 
@@ -197,10 +162,6 @@ def frame_to_halfblock(image, new_width=120):
     return "\n".join(result)
 
 
-# ============================================================
-# VIDEO PLAYER
-# ============================================================
-
 def play_ascii_video(
     video_path,
     width=None,
@@ -215,7 +176,6 @@ def play_ascii_video(
 
         return
 
-    # Get video FPS
     fps = cap.get(cv2.CAP_PROP_FPS)
 
     if fps <= 0:
@@ -223,12 +183,10 @@ def play_ascii_video(
 
     frame_time = 1 / fps
 
-    # Automatically use terminal width
     if width is None:
 
         width = get_terminal_width() - 2
 
-    # Don't allow ridiculously small widths
     width = max(40, width)
 
     clear_terminal()
@@ -244,10 +202,6 @@ def play_ascii_video(
 
             if not ret:
                 break
-
-            # ----------------------------------------------
-            # Choose rendering mode
-            # ----------------------------------------------
 
             if mode == "ascii":
 
@@ -278,17 +232,9 @@ def play_ascii_video(
 
                 break
 
-            # ----------------------------------------------
-            # Move cursor to top-left
-            # ----------------------------------------------
-
             print("\033[H", end="")
 
             print(output, end="")
-
-            # ----------------------------------------------
-            # Maintain video FPS
-            # ----------------------------------------------
 
             elapsed = (
                 time.perf_counter()
@@ -313,13 +259,8 @@ def play_ascii_video(
 
         print("\033[0m")
 
-
-# ============================================================
-# RUN
-# ============================================================
-
 play_ascii_video(
-    "YOUR VIDEO or PHOTO ",
+    "YOUR VIDEO or PHOTO local address",
     width=120,
     mode="color"
 )
